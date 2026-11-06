@@ -1,15 +1,25 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="light">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Proceso de implementación de ITmark: niveles, áreas de evaluación, ruta de implementación y diagnóstico de preparación para PYMEs tecnológicas.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Herramienta metodológica de diagnóstico de preparación operativa y seguridad de la información en PYMEs tecnológicas para la certificación ITmark. Prototipo académico con datos simulados.">
   <meta name="color-scheme" content="light dark">
-  <title>ITmark · Proceso de implementación</title>
+  <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0f19" media="(prefers-color-scheme: dark)">
+  <title>ITmark · Herramienta de diagnóstico de preparación</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%232550d9'/%3E%3Cstop offset='1' stop-color='%230d9488'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='32' y='42' font-family='Segoe UI,Arial,sans-serif' font-size='28' font-weight='800' fill='white' text-anchor='middle'%3EIT%3C/text%3E%3C/svg%3E">
+  <!-- Aplica el tema y la clase .js antes de pintar (evita parpadeos) -->
+  <script>
+    (function () {
+      var d = document.documentElement, t = null;
+      d.classList.add('js');
+      try { t = localStorage.getItem('itmark-tema'); } catch (e) {}
+      if (!t) t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      d.setAttribute('data-theme', t);
+    })();
+  </script>
   <link rel="stylesheet" href="style.css">
-  <!-- Chart.js (versión fija) para el gráfico radar; si no carga, la página usa barras -->
-  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
-  <script defer src="script.js"></script>
 </head>
 <body>
 
@@ -18,6 +28,8 @@
     <symbol id="i-negocio" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-seguridad" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z M9 12l2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-software" viewBox="0 0 24 24"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4M14 5l-4 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8zM14 3v5h5M9 13h6M9 17h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-flecha" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-sol" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
     <symbol id="i-luna" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
   </svg>
@@ -29,7 +41,7 @@
     <div class="container header-inner">
       <a class="brand" href="#inicio" aria-label="ITmark, ir al inicio">
         <span class="brand-mark" aria-hidden="true">IT</span>
-        <span class="brand-text">ITmark <small>Herramienta de implementación</small></span>
+        <span class="brand-text">ITmark <small>Herramienta de diagnóstico</small></span>
       </a>
 
       <nav id="main-nav" class="main-nav" aria-label="Principal">
@@ -44,6 +56,7 @@
       </nav>
 
       <div class="header-actions">
+        <a class="btn btn-primary btn-sm header-cta" href="#diagnostico">Diagnosticar</a>
         <button id="theme-toggle" class="icon-btn" type="button" aria-label="Cambiar a modo oscuro" aria-pressed="false">
           <svg class="icon icon-moon" aria-hidden="true"><use href="#i-luna"/></svg>
           <svg class="icon icon-sun" aria-hidden="true"><use href="#i-sol"/></svg>
@@ -62,26 +75,46 @@
     <section id="inicio" class="hero">
       <div class="container hero-grid">
         <div class="hero-copy reveal">
-          <p class="eyebrow">Certificación para PYMEs tecnológicas</p>
-          <h1>Proceso de implementación de <span class="grad">ITmark</span></h1>
-          <p class="lead">Conoce los niveles, las tres áreas que se evalúan y la ruta para prepararte. Responde el cuestionario y descubre si tu empresa está lista para adoptar el nivel que elijas.</p>
+          <p class="eyebrow eyebrow-light">Diagnóstico para PYMEs tecnológicas</p>
+          <h1>¿Tu empresa está lista para <span class="hl">ITmark</span>?</h1>
+          <p class="lead">Responde 30 preguntas por nivel, diez por cada área: gestión del negocio, seguridad de la información e ingeniería de software. En minutos sabrás tu cumplimiento por área, si es viable adoptar el nivel y qué brechas atender primero.</p>
           <div class="hero-cta">
-            <a class="btn btn-primary" href="#diagnostico">Iniciar diagnóstico</a>
-            <a class="btn btn-ghost" href="#proceso">Ver la ruta</a>
+            <a class="btn btn-primary btn-lg" href="#diagnostico">Iniciar diagnóstico <svg class="icon" aria-hidden="true"><use href="#i-flecha"/></svg></a>
+            <a class="btn btn-ghost-light btn-lg" href="#proceso">Ver la ruta</a>
           </div>
+          <p class="hero-fine">Sin registro. Las respuestas no salen de tu navegador.</p>
         </div>
 
-        <ul class="stat-grid reveal" aria-label="Datos clave">
-          <li class="card stat"><strong>3</strong><span>niveles: Básico, Premium y Elite</span></li>
-          <li class="card stat"><strong>3</strong><span>áreas: negocio, seguridad e ingeniería</span></li>
-          <li class="card stat"><strong>154</strong><span>empresas colombianas evaluadas desde 2011; 4 alcanzaron Elite<sup>1</sup></span></li>
-          <li class="card stat"><strong>3 años</strong><span>de vigencia de la certificación, con revisión continua<sup>2</sup></span></li>
+        <!-- Vista previa ilustrativa del resultado -->
+        <figure class="preview reveal" aria-label="Ejemplo ilustrativo de un resultado">
+          <div class="preview-head">
+            <span>Ejemplo de resultado</span>
+            <span class="chip chip-warn">Viable con condiciones</span>
+          </div>
+          <div class="preview-body">
+            <div class="ring ring-warn" style="--p:68"><span><b>68%</b><small>global</small></span></div>
+            <ul class="preview-bars">
+              <li><span>Negocio</span><b>80%</b><i class="pbar"><i style="width:80%"></i></i></li>
+              <li><span>Seguridad</span><b>45%</b><i class="pbar low"><i style="width:45%"></i></i></li>
+              <li><span>Software</span><b>78%</b><i class="pbar"><i style="width:78%"></i></i></li>
+            </ul>
+          </div>
+          <figcaption>Seguridad por debajo del 50 %: es la primera brecha a cerrar.</figcaption>
+        </figure>
+      </div>
+
+      <div class="container">
+        <ul class="stat-strip reveal" aria-label="Datos clave">
+          <li><strong>3</strong><span>niveles: Básico, Premium y Elite</span></li>
+          <li><strong>3</strong><span>áreas: negocio, seguridad e ingeniería</span></li>
+          <li><strong>154</strong><span>empresas colombianas evaluadas desde 2011; 4 alcanzaron Elite<sup>1</sup></span></li>
+          <li><strong>3 años</strong><span>de vigencia de la certificación, con revisión continua<sup>2</sup></span></li>
         </ul>
       </div>
     </section>
     <!-- ================= FIN: HERO ================= -->
 
-    <!-- ================= INICIO: NIVELES (tarjetas) ================= -->
+    <!-- ================= INICIO: NIVELES (escalera) ================= -->
     <section id="niveles" class="section">
       <div class="container">
         <header class="section-head reveal">
@@ -90,9 +123,9 @@
           <p>ITmark acredita la madurez demostrada en los procesos técnicos, de seguridad y de negocio de cada empresa<sup>3</sup>.</p>
         </header>
 
-        <div class="grid grid-3">
+        <div class="ladder">
           <article class="card level level-basico reveal">
-            <span class="badge">Nivel 1</span>
+            <div class="level-top"><span class="level-n">01</span><span class="tag">CMMI nivel 2 · Clase C</span></div>
             <h3>ITmark Básico</h3>
             <p>Acredita que la empresa es consciente de sus problemas de gestión, seguridad y técnicos, y los mantiene bajo control de forma habitual.</p>
             <ul class="checks">
@@ -103,7 +136,7 @@
             <p class="card-foot">Ideal como punto de partida.</p>
           </article>
           <article class="card level level-premium reveal">
-            <span class="badge">Nivel 2</span>
+            <div class="level-top"><span class="level-n">02</span><span class="tag">CMMI nivel 2 · Clase B</span></div>
             <h3>ITmark Premium</h3>
             <p>Acredita una buena madurez: los procesos evaluados en las tres áreas deben estar razonablemente desarrollados.</p>
             <ul class="checks">
@@ -114,7 +147,7 @@
             <p class="card-foot">Da confianza para una evaluación CMMI oficial.</p>
           </article>
           <article class="card level level-elite reveal">
-            <span class="badge">Nivel 3</span>
+            <div class="level-top"><span class="level-n">03</span><span class="tag">CMMI nivel 3</span></div>
             <h3>ITmark Elite</h3>
             <p>Acredita un nivel superior en la definición e institucionalización de los procesos y una mejora continua demostrada.</p>
             <ul class="checks">
@@ -130,79 +163,87 @@
     </section>
     <!-- ================= FIN: NIVELES ================= -->
 
-    <!-- ================= INICIO: ÁREAS (carrusel + tarjetas) ================= -->
+    <!-- ================= INICIO: ÁREAS (pestañas) ================= -->
     <section id="areas" class="section section-alt">
       <div class="container">
         <header class="section-head reveal">
           <p class="eyebrow">Qué se evalúa</p>
           <h2>Tres áreas, una visión completa de la empresa</h2>
+          <p>Cada área pesa lo mismo en el resultado. Elige una para ver qué se revisa y qué evidencia la respalda.</p>
         </header>
 
-        <div class="carousel reveal" id="carousel" role="region" aria-roledescription="carrusel" aria-label="Áreas de evaluación">
-          <div class="carousel-track">
-            <article class="slide slide-negocio" aria-roledescription="diapositiva" aria-label="1 de 3">
+        <div class="area-explorer reveal" id="area-explorer">
+          <div class="area-tabs" role="tablist" aria-label="Áreas de evaluación">
+            <button class="area-tab" role="tab" id="tab-negocio" aria-controls="panel-negocio" aria-selected="true" data-area="negocio">
+              <svg class="icon" aria-hidden="true"><use href="#i-negocio"/></svg><span>Gestión del negocio</span>
+            </button>
+            <button class="area-tab" role="tab" id="tab-seguridad" aria-controls="panel-seguridad" aria-selected="false" tabindex="-1" data-area="seguridad">
+              <svg class="icon" aria-hidden="true"><use href="#i-seguridad"/></svg><span>Seguridad de la información</span>
+            </button>
+            <button class="area-tab" role="tab" id="tab-software" aria-controls="panel-software" aria-selected="false" tabindex="-1" data-area="software">
+              <svg class="icon" aria-hidden="true"><use href="#i-software"/></svg><span>Ingeniería de software</span>
+            </button>
+          </div>
+
+          <article class="area-panel area-negocio" role="tabpanel" id="panel-negocio" aria-labelledby="tab-negocio">
+            <div class="area-intro">
               <svg class="icon icon-xl" aria-hidden="true"><use href="#i-negocio"/></svg>
               <h3>Gestión del negocio</h3>
               <p>Control financiero, administrativo y estratégico. Se toma como referencia el modelo 10-squared: diez categorías de procesos, entre ellas la estratégica, la comercial y la financiera.</p>
-            </article>
-            <article class="slide slide-seguridad" aria-roledescription="diapositiva" aria-label="2 de 3">
+            </div>
+            <div class="area-detail">
+              <h4>¿Qué revisan?</h4>
+              <ul class="dots-list">
+                <li>Procesos administrativos y comerciales documentados</li>
+                <li>Organigrama con roles claros</li>
+                <li>Registro de ingresos, gastos y facturación</li>
+                <li>Seguimiento de clientes y quejas</li>
+              </ul>
+              <p class="evidence"><svg class="icon" aria-hidden="true"><use href="#i-doc"/></svg><span><strong>Evidencia típica:</strong> manuales, organigrama, estados financieros, bitácora de soporte.</span></p>
+            </div>
+          </article>
+
+          <article class="area-panel area-seguridad" role="tabpanel" id="panel-seguridad" aria-labelledby="tab-seguridad" hidden>
+            <div class="area-intro">
               <svg class="icon icon-xl" aria-hidden="true"><use href="#i-seguridad"/></svg>
               <h3>Seguridad de la información</h3>
               <p>Protección de activos, copias de respaldo y mitigación de riesgos. Se apoya en las normas ISO de gestión de la seguridad y es de las áreas más débiles entre las empresas evaluadas<sup>4</sup>.</p>
-            </article>
-            <article class="slide slide-software" aria-roledescription="diapositiva" aria-label="3 de 3">
+            </div>
+            <div class="area-detail">
+              <h4>¿Qué revisan?</h4>
+              <ul class="dots-list">
+                <li>Contraseñas y control de acceso</li>
+                <li>Copias de seguridad periódicas</li>
+                <li>Acceso físico a áreas críticas</li>
+                <li>Protección contra software malicioso</li>
+              </ul>
+              <p class="evidence"><svg class="icon" aria-hidden="true"><use href="#i-doc"/></svg><span><strong>Evidencia típica:</strong> política de contraseñas, registros de respaldo, antivirus actualizado.</span></p>
+            </div>
+          </article>
+
+          <article class="area-panel area-software" role="tabpanel" id="panel-software" aria-labelledby="tab-software" hidden>
+            <div class="area-intro">
               <svg class="icon icon-xl" aria-hidden="true"><use href="#i-software"/></svg>
               <h3>Ingeniería de software</h3>
               <p>Gestión de requisitos, planificación, control de versiones y pruebas. Se basa en una versión simplificada de CMMI, interpretada a la medida de las PYMEs.</p>
-            </article>
-          </div>
-          <div class="carousel-ui">
-            <button class="icon-btn" type="button" data-dir="-1" aria-label="Anterior">&#10094;</button>
-            <div class="dots" role="tablist" aria-label="Elegir diapositiva"></div>
-            <button class="icon-btn" type="button" data-dir="1" aria-label="Siguiente">&#10095;</button>
-          </div>
-        </div>
-
-        <div class="grid grid-3 area-cards">
-          <article class="card area reveal">
-            <svg class="icon icon-lg" aria-hidden="true"><use href="#i-negocio"/></svg>
-            <h3>Negocio: ¿qué revisan?</h3>
-            <ul class="dots-list">
-              <li>Procesos administrativos y comerciales documentados</li>
-              <li>Organigrama con roles claros</li>
-              <li>Registro de ingresos, gastos y facturación</li>
-              <li>Seguimiento de clientes y quejas</li>
-            </ul>
-            <p class="evidence"><strong>Evidencia típica:</strong> manuales, organigrama, estados financieros, bitácora de soporte.</p>
-          </article>
-          <article class="card area reveal">
-            <svg class="icon icon-lg" aria-hidden="true"><use href="#i-seguridad"/></svg>
-            <h3>Seguridad: ¿qué revisan?</h3>
-            <ul class="dots-list">
-              <li>Contraseñas y control de acceso</li>
-              <li>Copias de seguridad periódicas</li>
-              <li>Acceso físico a áreas críticas</li>
-              <li>Protección contra software malicioso</li>
-            </ul>
-            <p class="evidence"><strong>Evidencia típica:</strong> política de contraseñas, registros de respaldo, antivirus actualizado.</p>
-          </article>
-          <article class="card area reveal">
-            <svg class="icon icon-lg" aria-hidden="true"><use href="#i-software"/></svg>
-            <h3>Software: ¿qué revisan?</h3>
-            <ul class="dots-list">
-              <li>Requisitos aprobados antes de desarrollar</li>
-              <li>Proyectos planificados con estimaciones</li>
-              <li>Control de versiones del código</li>
-              <li>Pruebas antes de la entrega</li>
-            </ul>
-            <p class="evidence"><strong>Evidencia típica:</strong> especificación firmada, cronogramas, repositorio, actas de aceptación.</p>
+            </div>
+            <div class="area-detail">
+              <h4>¿Qué revisan?</h4>
+              <ul class="dots-list">
+                <li>Requisitos aprobados antes de desarrollar</li>
+                <li>Proyectos planificados con estimaciones</li>
+                <li>Control de versiones del código</li>
+                <li>Pruebas antes de la entrega</li>
+              </ul>
+              <p class="evidence"><svg class="icon" aria-hidden="true"><use href="#i-doc"/></svg><span><strong>Evidencia típica:</strong> especificación firmada, cronogramas, repositorio, actas de aceptación.</span></p>
+            </div>
           </article>
         </div>
       </div>
     </section>
     <!-- ================= FIN: ÁREAS ================= -->
 
-    <!-- ================= INICIO: PROCESO DE IMPLEMENTACIÓN ================= -->
+    <!-- ================= INICIO: RUTA DE PREPARACIÓN ================= -->
     <section id="proceso" class="section">
       <div class="container">
         <header class="section-head reveal">
@@ -211,17 +252,17 @@
           <p>Una guía orientativa; los tiempos dependen de los recursos de cada empresa.</p>
         </header>
 
-        <ol class="steps">
-          <li class="card step reveal"><span class="step-n">1</span><h3>Conocer el esquema</h3><p>Entiende las tres áreas y elige el nivel al que quieres llegar. El Básico es el punto de partida más razonable.</p></li>
-          <li class="card step reveal"><span class="step-n">2</span><h3>Autodiagnosticarte</h3><p>Responde el cuestionario con honestidad: marca «Sí» solo si la práctica existe y tiene evidencia.</p></li>
-          <li class="card step reveal"><span class="step-n">3</span><h3>Priorizar las brechas</h3><p>Ordena lo que falta según su impacto y su esfuerzo. Empieza por lo que más aporta con menos costo.</p></li>
-          <li class="card step reveal"><span class="step-n">4</span><h3>Implementar y evidenciar</h3><p>Formaliza las prácticas, ponlas en uso y guarda los documentos, registros o configuraciones que las respaldan.</p></li>
-          <li class="card step reveal"><span class="step-n">5</span><h3>Evaluación oficial</h3><p>Un organismo certificador revisa a la empresa con evaluaciones simplificadas, de Clase C en el Básico y de Clase B en Premium.</p></li>
-          <li class="card step reveal"><span class="step-n">6</span><h3>Mantener y mejorar</h3><p>La certificación dura tres años con revisión continua: mantén las prácticas vivas y apunta al siguiente nivel.</p></li>
+        <ol class="timeline">
+          <li class="step reveal is-here"><span class="step-n">1</span><h3>Conocer el esquema</h3><p>Entiende las tres áreas y elige el nivel al que quieres llegar. El Básico es el punto de partida más razonable.</p></li>
+          <li class="step reveal is-here"><span class="step-n">2</span><h3>Autodiagnosticarte</h3><p>Responde el cuestionario con honestidad: marca «Sí» solo si la práctica existe y tiene evidencia.</p><span class="step-tag">Lo haces aquí</span></li>
+          <li class="step reveal is-here"><span class="step-n">3</span><h3>Priorizar las brechas</h3><p>Ordena lo que falta según su impacto y su esfuerzo. Empieza por lo que más aporta con menos costo.</p><span class="step-tag">Lo haces aquí</span></li>
+          <li class="step reveal"><span class="step-n">4</span><h3>Implementar y evidenciar</h3><p>Formaliza las prácticas, ponlas en uso y guarda los documentos, registros o configuraciones que las respaldan.</p></li>
+          <li class="step reveal"><span class="step-n">5</span><h3>Evaluación oficial</h3><p>Un organismo certificador revisa a la empresa con evaluaciones simplificadas, de Clase C en el Básico y de Clase B en Premium.</p></li>
+          <li class="step reveal"><span class="step-n">6</span><h3>Mantener y mejorar</h3><p>La certificación dura tres años con revisión continua: mantén las prácticas vivas y apunta al siguiente nivel.</p></li>
         </ol>
       </div>
     </section>
-    <!-- ================= FIN: PROCESO DE IMPLEMENTACIÓN ================= -->
+    <!-- ================= FIN: RUTA DE PREPARACIÓN ================= -->
 
     <!-- ================= INICIO: DIAGNÓSTICO ================= -->
     <section id="diagnostico" class="section section-alt">
@@ -229,38 +270,58 @@
         <header class="section-head reveal">
           <p class="eyebrow">Autodiagnóstico</p>
           <h2>¿Está lista tu empresa para este nivel?</h2>
-          <p>Elige el nivel, responde los criterios y recibirás una ventana con la valoración de viabilidad.</p>
+          <p>Elige el nivel y responde las 30 preguntas, área por área. Cada pregunta indica la evidencia que la respaldaría. Al terminar verás el cumplimiento por área, el gráfico radar y la valoración de viabilidad.</p>
         </header>
+
+        <!-- Selector de nivel -->
+        <fieldset class="level-picker reveal">
+          <legend class="sr-only">Nivel a evaluar</legend>
+          <label class="lp lp-basico"><input type="radio" name="nivel" value="basico" checked><span class="lp-box"><span class="lp-n">01</span><span class="lp-name">ITmark Básico</span><span class="lp-state" data-state="basico">Sin evaluar</span></span></label>
+          <label class="lp lp-premium"><input type="radio" name="nivel" value="premium"><span class="lp-box"><span class="lp-n">02</span><span class="lp-name">ITmark Premium</span><span class="lp-state" data-state="premium">Sin evaluar</span></span></label>
+          <label class="lp lp-elite"><input type="radio" name="nivel" value="elite"><span class="lp-box"><span class="lp-n">03</span><span class="lp-name">ITmark Elite</span><span class="lp-state" data-state="elite">Sin evaluar</span></span></label>
+        </fieldset>
 
         <div class="diag-grid">
           <div class="card form-card reveal">
-            <div class="level-selector">
-              <label for="level-select">Nivel a evaluar</label>
-              <select id="level-select">
-                <option value="basico">ITmark Básico</option>
-                <option value="premium">ITmark Premium</option>
-                <option value="elite">ITmark Elite</option>
-              </select>
-            </div>
-
-            <div class="progress" aria-live="polite">
-              <div class="progress-top"><span id="progress-text">0 de 0 respondidas</span></div>
-              <div class="bar"><span id="progress-bar"></span></div>
+            <div class="q-toolbar">
+              <div class="q-level">
+                <span class="q-level-n" id="level-n" aria-hidden="true">01</span>
+                <div class="q-level-txt"><small>Evaluando</small><b id="level-name">ITmark Básico</b></div>
+                <div class="progress" aria-live="polite">
+                  <div class="progress-top"><span><span id="progress-text">0 de 30</span> respondidas</span><span id="progress-pct">0 %</span></div>
+                  <div class="bar"><span id="progress-bar"></span></div>
+                </div>
+              </div>
+              <div class="q-tabs" id="q-tabs" role="tablist" aria-label="Áreas del cuestionario"></div>
             </div>
 
             <form id="evaluation-form" novalidate>
               <div id="questions-container"></div>
               <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Generar diagnóstico</button>
-                <button type="button" id="reset-btn" class="btn btn-ghost">Limpiar</button>
+                <button type="button" id="prev-area" class="btn btn-ghost">Área anterior</button>
+                <button type="button" id="next-area" class="btn btn-primary"><span id="next-label">Siguiente área</span> <svg class="icon" aria-hidden="true"><use href="#i-flecha"/></svg></button>
+                <button type="submit" id="submit-btn" class="btn btn-primary">Generar diagnóstico</button>
+                <button type="button" id="reset-btn" class="btn btn-link">Limpiar respuestas</button>
               </div>
+              <p class="save-status" id="save-status"><span class="save-dot" aria-hidden="true"></span><span id="save-text">Tus respuestas se guardan automáticamente en este navegador.</span></p>
             </form>
           </div>
 
           <aside class="card chart-card reveal" aria-live="polite">
-            <h3>Resultados de madurez</h3>
-            <div class="chart-wrap"><canvas id="radarChart" role="img" aria-label="Gráfico radar de cumplimiento por área"></canvas></div>
-            <div id="results-summary" class="results-summary"><p class="muted">Complete el cuestionario para ver los resultados.</p></div>
+            <div class="chart-head">
+              <h3>Resultados de madurez</h3>
+              <span id="result-chip" class="chip" hidden></span>
+            </div>
+            <div id="result-top" class="result-top" hidden>
+              <div id="result-ring" class="ring" style="--p:0"><span><b id="result-global">0%</b><small>global</small></span></div>
+              <p id="result-line" class="muted"></p>
+            </div>
+            <div id="results-summary" class="results-summary"></div>
+            <div id="radar-block" class="radar-block" hidden>
+              <h4>Perfil por área</h4>
+              <div class="chart-wrap"><canvas id="radarChart" role="img" aria-label="Gráfico radar de cumplimiento por área"></canvas></div>
+            </div>
+            <button type="button" id="reopen-btn" class="btn btn-ghost btn-block" hidden>Ver detalle y brechas</button>
           </aside>
         </div>
       </div>
@@ -277,9 +338,10 @@
         <div class="faq reveal">
           <details><summary>¿Este diagnóstico reemplaza la evaluación oficial?</summary><p>No. Es una herramienta de preparación con fines académicos y de datos simulados. Solo un organismo certificador puede otorgar el sello ITmark.</p></details>
           <details><summary>¿Cómo se decide si es viable adoptar un nivel?</summary><p>La viabilidad es «Sí» cuando el cumplimiento global llega al 70 % o más y ningún área baja del 50 %. Entre 40 % y 69 % es viable con condiciones, y por debajo del 40 % todavía no. Son umbrales propuestos por el equipo.</p></details>
+          <details><summary>¿Por qué cada nivel tiene 30 preguntas?</summary><p>Cada nivel de ITmark tiene su propia matriz de 30 requisitos, diez por área, y cada requisito se formula como una pregunta. Así una sola respuesta mueve el cumplimiento del área 10 puntos porcentuales. Las matrices de Premium y Elite son una propuesta del equipo del proyecto, pues los criterios oficiales no son públicos.</p></details>
           <details><summary>¿Puedo saltar directo a Premium o Elite?</summary><p>Los niveles son crecientes. La herramienta te advertirá si no has verificado el nivel anterior, porque cada nivel se construye sobre el anterior.</p></details>
           <details><summary>¿Qué significa «Parcial»?</summary><p>Que la práctica existe pero no está formalizada o no tiene evidencia. Vale la mitad de un «Sí».</p></details>
-          <details><summary>¿Se guarda lo que respondo?</summary><p>No. Todo ocurre en tu navegador y no se envía ningún dato.</p></details>
+          <details><summary>¿Se guarda lo que respondo?</summary><p>Solo en tu propio navegador (almacenamiento local), para que no pierdas el avance si recargas o cierras la página. No se envía ningún dato a ningún servidor. Puedes borrarlo cuando quieras con «Limpiar respuestas».</p></details>
         </div>
       </div>
     </section>
@@ -293,7 +355,9 @@
       <button class="icon-btn dialog-close" value="close" aria-label="Cerrar">&times;</button>
       <div id="dialog-body"></div>
       <div class="dialog-actions">
-        <button class="btn btn-primary" value="close">Entendido</button>
+        <button type="button" id="print-btn" class="btn btn-ghost">Imprimir o guardar PDF</button>
+        <button type="button" id="confirm-btn" class="btn btn-danger" hidden>Sí, limpiar</button>
+        <button id="dialog-ok" class="btn btn-primary" value="close">Entendido</button>
       </div>
     </form>
   </dialog>
@@ -302,11 +366,20 @@
   <!-- ================= INICIO: PIE DE PÁGINA ================= -->
   <footer class="site-footer">
     <div class="container">
-      
-      <p>&copy; 2026 Herramienta diagnóstica ITmark. Proyecto académico creado por Milena Gutiérrez Rodríguez e Ivan Andres Trujillo Gutiérrez.</p>
+
+      <p><strong>Herramienta metodológica de diagnóstico de preparación operativa y seguridad de la información en PYMEs tecnológicas para la certificación ITmark.</strong></p>
+      <p>Milena Gutiérrez Rodríguez e Iván Andrés Trujillo Gutiérrez · Director: Luis Alfredo Blanquicett Benavides · Especialización en Gestión de Tecnologías de la Información, Corporación Unificada Nacional de Educación Superior (CUN).</p>
+      <p>&copy; 2026 · Proyecto académico. No constituye una evaluación oficial ni otorga la certificación ITmark.</p>
     </div>
   </footer>
   <!-- ================= FIN: PIE DE PÁGINA ================= -->
 
+  <button type="button" id="to-top" class="icon-btn to-top" aria-label="Volver arriba" hidden>
+    <svg class="icon" aria-hidden="true" style="transform:rotate(-90deg)"><use href="#i-flecha"/></svg>
+  </button>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+ <!-- Chart.js (versión fija) para el gráfico radar; si no carga, la página usa solo las barras -->
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
+  <script defer src="script.js"></script>
 </body>
 </html>
